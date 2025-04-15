@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 const Users = require("../models/users.model");
 const Mailer = require("../utils/nodeMailer");
-const { PhoneNumberOTP, OTPVarification} = require("../utils/phoneOTP");
+const { PhoneNumberOTP, OTPVarification } = require("../utils/phoneOTP");
 const CreatePDF = require("../utils/pdfmake");
 
 const generate_user = async (userID) => {
@@ -91,55 +91,87 @@ const checkVarification = async (req, res) => {
     const { email, otp } = req.body;
 
     console.log(otp);
-  
+
     const varify_OTP = await OTPVarification(otp)
-    
+
     console.log(varify_OTP);
-    if(varify_OTP === "approved") {
-  
-      const user = await Users.findOne({email: email})
-  
+    if (varify_OTP === "approved") {
+
+      const user = await Users.findOne({ email: email })
+
       user.isVarify = true
-  
-      await user.save({validateBeforeSave: true})
 
-      // const docDefinition = {
-      //   content: [
-      //     { text: 'Tables', style: 'header' },
-      //     {
-      //       style: 'tableExample',
-      //       table: {
-      //         body: [
-      //           ['Name', 'Email', 'Role'],
-      //           [`${user.name}`, `${user.email}`, `${user.role}`]
-      //         ]
-      //       }
-      //     },
-      //   ],
-      //   style: {
-      //     // header: 
-      //   }
-      // }
-      // await CreatePDF(docDefinition, user.name)
+      await user.save({ validateBeforeSave: true })
 
+      const docDefinition = {
+        content: [
+          { text: 'Tables', style: 'titleStyle', width: '*' },
+          {
+            image: 'public/cat_img/1738379580700-535171627-pngwing.com (1).png',
+            width: 150,
+            height: 150,
+            alignment: 'center'
+          },
+          {
+            columns: [
+
+
+
+              { width: '*', text: '' },
+              {
+                width: 'auto',
+                table: {
+                  body: [
+                    ['Name', 'Email', 'Role'],
+                    [`${user.name}`, `${user.email}`, `${user.role}`]
+                  ],
+                  alignment: "center"
+                }
+              },
+
+              { width: '*', text: '' },
+            ]
+          },
+
+
+
+          {
+            text: 'The following table has nothing more than a body array The following table has nothing more than a body array', style: "dec", width: '*'
+          },
+
+        ],
+
+
+        styles: {
+          titleStyle: {
+            fontSize: 20,
+            bold: true,
+            alignment: 'center'
+          },
+
+          dec: {
+            alignment: 'center'
+          }
+        }
+      }
+      await CreatePDF(docDefinition, user.name)
       return res.status(200).json({
         success: true,
-        message: "OTP verified" 
+        message: "OTP verified"
       });
     } else {
       return res.status(400).json({
         success: false,
-        message: "Invalid OTP" 
+        message: "Invalid OTP"
       });
     }
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Error in server: " + error.message 
+      message: "Error in server: " + error.message
     });
   }
- 
-  
+
 }
 
 const user_login = async (req, res) => {
@@ -156,7 +188,7 @@ const user_login = async (req, res) => {
       });
     }
 
-    if(user.isVarify === false) {
+    if (user.isVarify === false) {
       return res.status(400).json({
         success: false,
         message: "Varify OPT first!",
@@ -184,7 +216,7 @@ const user_login = async (req, res) => {
 
     const { accessToken, refreshToken } = await generate_user(user._id);
 
-    
+
 
     return res
       .status(200)
