@@ -85,7 +85,6 @@ const registerUser = async (req, res) => {
     });
   }
 };
-
 const checkVarification = async (req, res) => {
   try {
     const { email, otp } = req.body;
