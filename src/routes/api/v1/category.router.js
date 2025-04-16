@@ -2,6 +2,8 @@
  const express = require('express');
 const upload = require("../../../middleware/Upload.js");
 const auth = require("../../../middleware/auth.js");
+const validation = require("../../../middleware/validation.js");
+const { categoryValidation } = require("../../../validation/index.js");
 
 const routes = express.Router();
 
@@ -20,6 +22,7 @@ routes.get(
 //http://localhost:8000/api/v1/category/post-category
 routes.post(
   "/post-category",
+  validation(categoryValidation.addCategory),
   upload.single('cat_img'), 
   auth(["employee", "admin", "user"]),
   categoryController.addCategory
@@ -28,14 +31,16 @@ routes.post(
 //http://localhost:8000/api/v1/category/put-category:id
 routes.put(
   "/put-category/:id",
+  validation(categoryValidation.updateCategory),
   auth(["employee", "admin", "user"]),
-  upload.single('cat_img'), 
+  upload.single('cat_img'),
   categoryController.updateCategory
 );
 
 //http://localhost:8000/api/v1/category/delete-category:id
 routes.delete(
   "/delete-category/:id",
+  validation(categoryValidation.deleteCategory),
   auth(["employee", "admin", "user"]),
   categoryController.deleteCategory
 );
