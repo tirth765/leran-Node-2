@@ -63,6 +63,8 @@ const getCategory = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
+    console.log("ssss",req.body, req.file);
+    
     const category = await Categores.create({ ...req.body, cat_img: req.file.path })
 
     if (!category) {

@@ -1,6 +1,6 @@
  const { categoryController } = require("../../../controller/index.js");
  const express = require('express');
-const upload = require("../../../middleware/Upload.js");
+const upload = require("../../../middleware/upload.js");
 const auth = require("../../../middleware/auth.js");
 const validation = require("../../../middleware/validation.js");
 const { categoryValidation } = require("../../../validation/index.js");
@@ -22,9 +22,9 @@ routes.get(
 //http://localhost:8000/api/v1/category/post-category
 routes.post(
   "/post-category",
-  validation(categoryValidation.addCategory),
-  upload.single('cat_img'), 
   auth(["employee", "admin", "user"]),
+  upload.single('cat_img'), 
+  validation(categoryValidation.addCategory),
   categoryController.addCategory
 );
 

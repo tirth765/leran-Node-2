@@ -6,7 +6,7 @@ const pick = (Object, keys) => {
 
             return obj
         }
-    }, {})
+    }, {})  
 }
 
 module.exports = pick

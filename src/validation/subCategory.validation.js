@@ -3,7 +3,7 @@ const Joi = require('joi');
 const addSubCategory = {
     body: Joi.object().keys({
         Category: Joi.string().required(),
-        name: Joi.string().required(),
+        name: Joi.string().required().trim(),
         description: Joi.string().required(),
     })
 }
@@ -15,7 +15,7 @@ const updateSubCategory = {
 
     body: Joi.object().keys( {
         Category: Joi.string().required(),
-        name: Joi.string().required(),
+        name: Joi.string().required().trim(),
         description: Joi.string().required(),
     })
 }
