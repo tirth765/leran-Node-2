@@ -6,6 +6,7 @@ var cors = require('cors')
 var cookieParser = require('cookie-parser')
 const passport = require('passport')
 const Google = require('./utils/provider')
+const connectChat = require('./utils/soketIO')
 
 const app = express()
 app.use(express.json())
@@ -19,6 +20,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 Google()
+connectChat()
 
 var corsOptions = {
     origin: 'http://localhost:3000',
