@@ -1,29 +1,32 @@
-const { Server } = require("socket.io")
+const { Server } = require("socket.io");
 
 const connectChat = () => {
-try {
+  try {
     const io = new Server({
-        cors: {
-            origin: ["http://localhost:3000"]
-          }
+      cors: {
+        origin: ["http://localhost:3000"],
+      },
+    });
+
+    io.on("connection", (socket) => {
+      socket.emit("Welcome", "Welcome to chat");
+      console.log("socket", socket.id);
+
+      socket.on("message", ({message, to}) => {
+        io.to(to).emit("recceive_msg", message);
       });
 
-      io.on("connection", (socket) => {
-        socket.emit("Welcome", "Welcome to chat")
-        console.log("socket",socket.id);
+      socket.on("group", (group)  => {
+        socket.join(group)
+      }
+      )
         
-        socket.on("message", (msg) => {
-          io.emit("recceive_msg"), msg
-        })
-        
-      })
+    });
 
-      io.listen(4000)
-} catch (error) {
+    io.listen(4000);
+  } catch (error) {
     console.log(error);
-    
-    
-}
-}
+  }
+};
 
-module.exports = connectChat
+module.exports = connectChat;
