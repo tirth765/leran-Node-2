@@ -5,6 +5,7 @@ const Users = require("../models/users.model");
 const Mailer = require("../utils/nodeMailer");
 const { PhoneNumberOTP, OTPVarification } = require("../utils/phoneOTP");
 const CreatePDF = require("../utils/pdfmake");
+const { options } = require("joi");
 
 const generate_user = async (userID) => {
   const user = await Users.findById(userID);
@@ -59,16 +60,36 @@ const registerUser = async (req, res) => {
 
       const userData = await Users.findById(User._id).select("-password");
 
-      // const OTP = Math.floor(1000 + Math.random() * 9000);
+      const OTP = Math.floor(1000 + Math.random() * 9000);
 
-      // Mailer(email, "Verify your Fruitable account", `Your OTP is:- ${OTP}`)
+      const statusEmail = Mailer(email, "Verify your Fruitable account", `Your OTP is:- ${OTP}`)
 
-      PhoneNumberOTP()
+      console.log("statusEmail", statusEmail);
 
-      return res.status(201).json({
+      if(statusEmail) {
+
+        // req.session.email = email;
+        // req.session.otp = OTP;
+
+        const option= {
+          httpOnly: true,
+          secure: true,
+          sameSite:'None',
+          maxAge: 60 * 5 * 1000
+        }
+      }
+
+      const otpTocken = jwt.sign({otp, email},process.env.otpTocken ,{expiresIn:'5m'})
+      
+
+      // PhoneNumberOTP()
+
+      return res.status(201)
+      .cookie("otpTocken", otpTocken, options)
+      .json({
         success: true,
         data: userData,
-        message: "successFull data add",
+        message: "Please Verified OTP",
       });
     } catch (error) {
       return res.status(500).json({
@@ -85,6 +106,7 @@ const registerUser = async (req, res) => {
     });
   }
 };
+
 const checkVarification = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -208,9 +230,20 @@ const user_login = async (req, res) => {
       "-password-refreshToken"
     );
 
-    const options = {
+    const AccOptions = {
       httpOnly: true,
       secure: true,
+      sameSite:'None',
+      maxAge: 60 * 60 * 1000
+
+    };
+
+    const RefOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite:'None',
+      maxAge: 60 * 60 * 24 * 1000
+
     };
 
     const { accessToken, refreshToken } = await generate_user(user._id);
@@ -219,8 +252,8 @@ const user_login = async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, AccOptions)
+      .cookie("refreshToken", refreshToken, RefOptions)
       .json({
         success: true,
         data: userData,
@@ -281,6 +314,8 @@ const generateNewTokens = async (req, res) => {
       const options = {
         httpOnly: true,
         secure: true,
+        sameSite:'None',
+        maxAge: 60 * 60 * 1000
       };
 
       const { accessToken, refreshToken } = await generate_user(user._id);
@@ -331,6 +366,7 @@ const user_logout = async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true,
+      sameSite:'None',
     };
 
     return res
@@ -395,6 +431,100 @@ const check_Auth = async (req, res) => {
   }
 };
 
+const OTPVarificationEmail = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    console.log(otp);
+
+    const token =
+    req.cookies.accessToken ||
+    req.headers.authorization?.replace("Bearer ", "");
+
+
+    const varify_OTP = await OTPVarification(otp)
+
+    console.log(varify_OTP);
+    if (varify_OTP === "approved") {
+
+      const user = await Users.findOne({ email: email })
+
+      user.isVarify = true
+
+      await user.save({ validateBeforeSave: false })
+
+      // const docDefinition = {
+      //   content: [
+      //     { text: 'Tables', style: 'titleStyle', width: '*' },
+      //     {
+      //       image: 'public/cat_img/1738379580700-535171627-pngwing.com (1).png',
+      //       width: 150,
+      //       height: 150,
+      //       alignment: 'center'
+      //     },
+      //     {
+      //       columns: [
+
+
+
+      //         { width: '*', text: '' },
+      //         {
+      //           width: 'auto',
+      //           table: {
+      //             body: [
+      //               ['Name', 'Email', 'Role'],
+      //               [`${user.name}`, `${user.email}`, `${user.role}`]
+      //             ],
+      //             alignment: "center"
+      //           }
+      //         },
+
+      //         { width: '*', text: '' },
+      //       ]
+      //     },
+
+
+
+      //     {
+      //       text: 'The following table has nothing more than a body array The following table has nothing more than a body array', style: "dec", width: '*'
+      //     },
+
+      //   ],
+
+
+      //   styles: {
+      //     titleStyle: {
+      //       fontSize: 20,
+      //       bold: true,
+      //       alignment: 'center'
+      //     },
+
+      //     dec: {
+      //       alignment: 'center'
+      //     }
+      //   }
+      // }
+
+      // await CreatePDF(docDefinition, user.name)
+      
+      return res.status(200).json({
+        success: true,
+        message: "OTP verified"
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP"
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error in server: " + error.message
+    });
+  }
+
+}
 
 
 module.exports = {
@@ -404,5 +534,6 @@ module.exports = {
   user_logout,
   check_Auth,
   generate_user,
-  checkVarification
+  checkVarification,
+  OTPVarificationEmail
 };

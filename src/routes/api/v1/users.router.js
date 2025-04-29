@@ -76,4 +76,9 @@ user.post(
     usersController.checkVarification
 )
 
+user.post(
+    '/OTPVarificationEmail',
+    usersController.OTPVarificationEmail
+)
+
 module.exports = user
