@@ -10,7 +10,7 @@ const routes = express.Router();
 //http://localhost:8000/api/v1/category/list-categores
 routes.get(
   "/list-categores",
-  categoryController.listCategores
+  categoryController.listCategores 
 );
 
 //http://localhost:8000/api/v1/category/get-category
