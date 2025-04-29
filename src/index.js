@@ -23,7 +23,8 @@ Google()
 connectChat()
 
 var corsOptions = {
-    origin: 'http://localhost:3000',
+    // origin: 'http://localhost:3000',
+    origin: 'https://fruit-table-react.vercel.app',
     optionsSuccessStatus: 200,
     credentials: true
 }
@@ -41,8 +42,8 @@ app.get('/', (req, res) => {
     })
 })
 
-// app.listen(8000, () => {
-//     console.log(`Example app listening on port`)
-// })
+app.listen(8000, () => {
+    console.log(`Example app listening on port`)
+})
 
-module.exports = app
+// module.exports = app
