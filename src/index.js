@@ -36,7 +36,7 @@ connectDB()
 app.use('/api/v1', route)
 
 app.get('/', (req, res) => {
-    res.json({
+   return res.json({
         message: "Wellcome to fruit table"
     })
 })
