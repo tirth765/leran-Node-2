@@ -1,9 +1,10 @@
  const { categoryController } = require("../../../controller/index.js");
  const express = require('express');
-const upload = require("../../../middleware/upload.js");
+
 const auth = require("../../../middleware/auth.js");
 const validation = require("../../../middleware/validation.js");
 const { categoryValidation } = require("../../../validation/index.js");
+const upload = require("../../../middleware/Upload.js");
 
 const routes = express.Router();
 
