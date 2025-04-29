@@ -35,7 +35,14 @@ app.use(cors(corsOptions))
 connectDB()
 app.use('/api/v1', route)
 
-
-app.listen(8000, () => {
-    console.log(`Example app listening on port`)
+app.get('/', (req, res) => {
+    res.json({
+        message: "Wellcome to fruit table"
+    })
 })
+
+// app.listen(8000, () => {
+//     console.log(`Example app listening on port`)
+// })
+
+module.exports = app
