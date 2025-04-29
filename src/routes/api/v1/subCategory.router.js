@@ -1,8 +1,8 @@
 const express = require('express')
 const { subCategoryController } = require('../../../controller')
-const upload = require('../../../middleware/upload')
 const validation = require('../../../middleware/validation')
 const { subCategoryValidation } = require('../../../validation')
+const upload = require('../../../middleware/Upload')
 
 const routes = express()
 
