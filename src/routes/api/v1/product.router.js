@@ -1,6 +1,6 @@
 const express = require('express')
 const { productController } = require('../../../controller')
-const upload = require('../../../middleware/Upload')
+const upload = require('../../../middleware/upload')
 
 const routes = express.Router()
 

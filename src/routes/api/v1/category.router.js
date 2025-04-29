@@ -4,7 +4,7 @@
 const auth = require("../../../middleware/auth.js");
 const validation = require("../../../middleware/validation.js");
 const { categoryValidation } = require("../../../validation/index.js");
-const upload = require("../../../middleware/Upload.js");
+const upload = require("../../../middleware/upload");
 
 const routes = express.Router();
 
