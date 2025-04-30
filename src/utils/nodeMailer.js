@@ -36,7 +36,8 @@
 
 
 // const nodemailer = require('nodemailer');
-const { Resend } = require('resend')
+
+const { Resend } = require('resend');
 
 const Mailer = async (email, subject, massage) => {
 
