@@ -71,7 +71,7 @@ const registerUser = async (req, res) => {
         // req.session.email = email;
         // req.session.otp = OTP;
 
-        const option= {
+        const cookieOption= {
           httpOnly: true,
           secure: true,
           sameSite:'None',
@@ -80,12 +80,11 @@ const registerUser = async (req, res) => {
       }
 
       const otpTocken = jwt.sign({OTP, email},process.env.otpTocken ,{expiresIn:'5m'})
-      
 
       // PhoneNumberOTP()
 
       return res.status(201)
-      .cookie("otpTocken", otpTocken, options)
+      .cookie("otpTocken", otpTocken, cookieOption)
       .json({
         success: true,
         data: userData,
