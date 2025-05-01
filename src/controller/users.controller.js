@@ -450,9 +450,12 @@ const OTPVarificationEmail = async (req, res) => {
       });
     }
 
-    const varifyTocken = jwt.verify(token, process.env.otpTocken);
+    console.log(token);
+    
 
-    console.log(varifyTocken._id);
+    const varifyTocken = await jwt.verify(token, process.env.otpTocken);
+
+    console.log(varifyTocken);
 
     if (!varifyTocken) {
       return res.status(400).json({
