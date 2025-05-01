@@ -70,7 +70,6 @@ const addCategory = async (req, res) => {
 
     console.log("CCCCCCCCCCCC",cImage);
     
-    
     const category = await Categores.create({ ...req.body, cat_img: {url: cImage.url, public_id: cImage.public_id } })
 
     if (!category) {
