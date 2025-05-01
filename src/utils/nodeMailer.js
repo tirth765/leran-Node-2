@@ -42,16 +42,18 @@ const { Resend } = require('resend');
 const Mailer = async (email, subject, massage) => {
 
     try {
-       
 
         const resend = new Resend('re_FpcypgzM_Bx4G3GNEL9uBYjYA86rWMTWi');
 
-        await resend.emails.send({
+        const x = await resend.emails.send({
           from: 'onboarding@resend.dev',
           to: email,
           subject: subject,
-          html: '<p>Congrats on sending your <strong>first email</strong>!</p>'
+          html: massage
         });
+
+        console.log(x);
+        
 
         return true
 

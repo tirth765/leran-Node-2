@@ -62,7 +62,7 @@ const registerUser = async (req, res) => {
 
       const OTP = Math.floor(1000 + Math.random() * 9000);
 
-      const statusEmail = Mailer(email, "Verify your Fruitable account", `Your OTP is:- ${OTP}`)
+      const statusEmail = await Mailer(email, "Verify your Fruitable account", `Your OTP is:- ${OTP}`)
 
       console.log("statusEmail", statusEmail);
 
@@ -79,7 +79,7 @@ const registerUser = async (req, res) => {
         }
       }
 
-      const otpTocken = jwt.sign({otp, email},process.env.otpTocken ,{expiresIn:'5m'})
+      const otpTocken = jwt.sign({OTP, email},process.env.otpTocken ,{expiresIn:'5m'})
       
 
       // PhoneNumberOTP()
@@ -441,17 +441,40 @@ const OTPVarificationEmail = async (req, res) => {
     req.cookies.accessToken ||
     req.headers.authorization?.replace("Bearer ", "");
 
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        data: [],
+        message: "token not found",
+      });
+    }
 
-    const varify_OTP = await OTPVarification(otp)
+    const varifyTocken = jwt.verify(token, process.env.otpTocken);
 
-    console.log(varify_OTP);
-    if (varify_OTP === "approved") {
+    console.log(varifyTocken._id);
 
+    if (!varifyTocken) {
+      return res.status(400).json({
+        success: false,
+        data: [],
+        message: "token not verify",
+      });
+    }
+
+    if(varifyTocken.email === email && varifyTocken.OTP === otp) {
       const user = await Users.findOne({ email: email })
 
       user.isVarify = true
 
       await user.save({ validateBeforeSave: false })
+
+      return res.status(200).json({
+        success: true,
+        message: "OTP verified"
+      });
+   
+    }
+     
 
       // const docDefinition = {
       //   content: [
@@ -507,16 +530,7 @@ const OTPVarificationEmail = async (req, res) => {
 
       // await CreatePDF(docDefinition, user.name)
       
-      return res.status(200).json({
-        success: true,
-        message: "OTP verified"
-      });
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP"
-      });
-    }
+     
   } catch (error) {
     return res.status(500).json({
       success: false,

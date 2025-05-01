@@ -1,5 +1,6 @@
 const Categores = require("../models/category.model");
 const fs = require("fs");
+const cloudinaryImage = require("../utils/cloudinary");
 
 const listCategores = async (req, res) => {
   try {
@@ -64,8 +65,13 @@ const getCategory = async (req, res) => {
 const addCategory = async (req, res) => {
   try {
     console.log("ssss",req.body, req.file);
+
+    const cImage = await cloudinaryImage(req.file.path, "category")
+
+    console.log("CCCCCCCCCCCC",cImage);
     
-    const category = await Categores.create({ ...req.body, cat_img: req.file.path })
+    
+    const category = await Categores.create({ ...req.body, cat_img: cImage.url })
 
     if (!category) {
       return res.status(400)
