@@ -1,19 +1,18 @@
 const cloudinary = require('cloudinary').v2; 
 
-const cloudinaryImage = async (filepath, foldername) => {
+// Configuration
+cloudinary.config({ 
+    cloud_name: 'dcku9d4kk', 
+    api_key: process.env.CLOUDINARY_KEY, 
+    api_secret: process.env.CLOUDINARY_SECRET
+});
 
-        // Configuration
-        cloudinary.config({ 
-            cloud_name: 'dcku9d4kk', 
-            api_key: process.env.CLOUDINARY_KEY, 
-            api_secret: process.env.CLOUDINARY_SECRET
-        });
+const cloudinaryImage = async (filepath, foldername) => {       
         
         // Upload an image
          const uploadResult = await cloudinary.uploader
            .upload(
             filepath, {
-                public_id: foldername,
                 folder: foldername
             }
            )
@@ -27,4 +26,15 @@ const cloudinaryImage = async (filepath, foldername) => {
     
 }
 
-module.exports = cloudinaryImage
+const deleteCloudinaryImage = async() => {
+    try {
+        await cloudinary.destroy(public_id)
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+
+
+module.exports = {cloudinaryImage,deleteCloudinaryImage}

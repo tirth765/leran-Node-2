@@ -71,7 +71,7 @@ const addCategory = async (req, res) => {
     console.log("CCCCCCCCCCCC",cImage);
     
     
-    const category = await Categores.create({ ...req.body, cat_img: cImage.url })
+    const category = await Categores.create({ ...req.body, cat_img: {url: cImage.url, public_id: cImage.public_id } })
 
     if (!category) {
       return res.status(400)
@@ -161,18 +161,20 @@ const deleteCategory = async (req, res) => {
         })
     }
 
-    fs.unlink(category.cat_img, (err) => {
-      if(err) {
-        return res.status(400)
-        .json({
-          success: false,
-          data: null,
-          message: "Error"
-        })      
-      } 
+    deleteCloudinaryImage(category.cat_img.public_id)
+
+    // fs.unlink(category.cat_img, (err) => {
+    //   if(err) {
+    //     return res.status(400)
+    //     .json({
+    //       success: false,
+    //       data: null,
+    //       message: "Error"
+    //     })      
+    //   } 
 
     
-    })
+    // })
 
 
     return res.status(200)
