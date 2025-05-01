@@ -150,8 +150,6 @@ const deleteCategory = async (req, res) => {
   try {
     const category = await Categores.findByIdAndDelete(req.params.id)
 
-
-
     if (!category) {
       return res.status(400)
         .json({
