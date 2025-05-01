@@ -175,7 +175,9 @@ const checkVarification = async (req, res) => {
           }
         }
       }
+
       await CreatePDF(docDefinition, user.name)
+      
       return res.status(200).json({
         success: true,
         message: "OTP verified"
@@ -462,6 +464,7 @@ const OTPVarificationEmail = async (req, res) => {
     }
 
     if(varifyTocken.email === email && varifyTocken.OTP === otp) {
+
       const user = await Users.findOne({ email: email })
 
       user.isVarify = true
