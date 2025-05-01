@@ -440,7 +440,7 @@ const OTPVarificationEmail = async (req, res) => {
     console.log(otp);
 
     const token =
-    req.cookies.accessToken ||
+    req.cookies.otpTocken ||
     req.headers.authorization?.replace("Bearer ", "");
 
     if (!token) {
