@@ -66,18 +66,18 @@ const registerUser = async (req, res) => {
 
       console.log("statusEmail", statusEmail);
 
-      if(statusEmail) {
+     
 
         // req.session.email = email;
         // req.session.otp = OTP;
 
-        const cookieOption= {
+        const cookieOption = {
           httpOnly: true,
           secure: true,
           sameSite:'None',
           maxAge: 60 * 5 * 1000
         }
-      }
+      
 
       const otpTocken = jwt.sign({OTP, email},process.env.otpTocken ,{expiresIn:'5m'})
 
