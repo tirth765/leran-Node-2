@@ -465,7 +465,7 @@ const OTPVarificationEmail = async (req, res) => {
       });
     }
 
-    if(varifyTocken.email === email && varifyTocken.OTP === otp) {
+    if(varifyTocken.email === email && varifyTocken.OTP == otp) {
 
       const user = await Users.findOne({ email: email })
 
