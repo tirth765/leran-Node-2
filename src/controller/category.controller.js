@@ -1,6 +1,6 @@
 const Categores = require("../models/category.model");
 const fs = require("fs");
-const cloudinaryImage = require("../utils/cloudinary");
+const {cloudinaryImage, deleteCloudinaryImage} = require("../utils/cloudinary");
 
 const listCategores = async (req, res) => {
   try {
@@ -68,7 +68,7 @@ const addCategory = async (req, res) => {
 
     const cImage = await cloudinaryImage(req.file.path, "category")
 
-    console.log("CCCCCCCCCCCC",cImage);
+    console.log("cloudinaryImage:",cImage);
     
     const category = await Categores.create({ ...req.body, cat_img: {url: cImage.url, public_id: cImage.public_id } })
 
@@ -92,7 +92,7 @@ const addCategory = async (req, res) => {
       .json({
         success: false,
         data: [],
-        message: "Internal server Error" + error.message
+        message: "Internal server Error:" + error.message
       })
   }
 };  

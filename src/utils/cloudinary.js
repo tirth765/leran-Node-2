@@ -37,4 +37,7 @@ const deleteCloudinaryImage = async(public_id) => {
 
 
 
-module.exports = {cloudinaryImage,deleteCloudinaryImage}
+module.exports = {
+    cloudinaryImage,
+    deleteCloudinaryImage
+}
