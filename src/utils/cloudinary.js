@@ -28,7 +28,9 @@ const cloudinaryImage = async (filepath, foldername) => {
 
 const deleteCloudinaryImage = async(public_id) => {
     try {
-        await cloudinary.destroy(public_id)
+        console.log("public_id", public_id);
+        
+        await cloudinary.uploader.destroy(public_id)
     } catch (error) {
         console.log(error);
         

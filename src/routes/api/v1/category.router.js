@@ -32,9 +32,9 @@ routes.post(
 //http://localhost:8000/api/v1/category/put-category:id
 routes.put(
   "/put-category/:id",
-  validation(categoryValidation.updateCategory),
   auth(["employee", "admin", "user"]),
   upload.single('cat_img'),
+  validation(categoryValidation.updateCategory),
   categoryController.updateCategory
 );
 

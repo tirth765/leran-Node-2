@@ -6,7 +6,7 @@ const connectDB = async() => {
         .then(() => {
             console.log("connect sucessfully");
         })
-        .catch(() => {
+        .catch((error) => {
             console.log("connection error", error);
         })
     } catch (error) {
