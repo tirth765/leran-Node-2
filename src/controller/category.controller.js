@@ -116,10 +116,13 @@ const updateCategory = async (req, res) => {
           updatedAll =  {...req.body}
       }
 
-      const category = await Categores.findByIdAndUpdate(req.params.id,
-        updatedAll,
-        { new: true, runValidators: true }
-      );
+      deleteCloudinaryImage(category.cat_img.public_id)
+
+      const cImage = await cloudinaryImage(req.file.path, "category")
+
+      console.log("UpdateCloudinaryImage:",cImage);
+      
+      const category = await Categores.findByIdAndUpdate(req.params.id, updatedAll, { ...req.body, cat_img: {url: cImage.url, public_id: cImage.public_id }}, { new: true, runValidators: true } )
 
       if (!category) {
           return res.status(400).json({
@@ -129,11 +132,15 @@ const updateCategory = async (req, res) => {
           })
       }
 
+      
+
+
       res.status(200).json({
           success: true,
           data: category,
           message: "category updated successfully."
       })
+
   } catch (error) {
       res.status(500).json({
           success: false,
