@@ -116,9 +116,9 @@ const updateCategory = async (req, res) => {
           updatedAll =  {...req.body}
       }
 
-      deleteCloudinaryImage(category.cat_img.public_id)
+      deleteCloudinaryImage(category?.cat_img?.public_id)
 
-      const cImage = await cloudinaryImage(req.file.path, "category")
+      const cImage = await cloudinaryImage(req.file?.path, "category")
 
       console.log("UpdateCloudinaryImage:",cImage);
       
