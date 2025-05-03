@@ -1,5 +1,6 @@
 const SubCategores = require("../models/subCategory.model");
 const fs = require("fs");
+const { cloudinaryImage } = require("../utils/cloudinary");
 
 const getsubCategores = async (req, res) => {
   try {
@@ -29,9 +30,15 @@ const getsubCategores = async (req, res) => {
 
 const postsubCategores = async (req, res) => {
   try {
-    console.log(req.body);
 
-    const subCategory = await SubCategores.create({...req.body, subcat_img: req.file.path});
+    console.log("ssss", req.body, req.file);
+
+    const cImage = await cloudinaryImage(req.file.path, "subCategory")
+
+    console.log("cloudinaryImage:", cImage);
+
+    const subCategory = await SubCategores.create({ ...req.body, subcat_img: { url: cImage.url, public_id: cImage.public_id } })
+
     if (!subCategory) {
       return res.status(400).json({
         success: false,
@@ -48,7 +55,7 @@ const postsubCategores = async (req, res) => {
     return res.status(500).json({
       success: false,
       data: [],
-      message: "Internal server Error" + error.message,
+      message: "Internal server Error: " + error.message,
     });
   }
 };

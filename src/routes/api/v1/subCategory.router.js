@@ -3,6 +3,7 @@ const { subCategoryController } = require('../../../controller')
 const validation = require('../../../middleware/validation')
 const { subCategoryValidation } = require('../../../validation')
 const upload = require('../../../middleware/upload')
+const auth = require('../../../middleware/auth')
 
 const routes = express()
 
@@ -16,16 +17,17 @@ routes.get(
 //http://localhost:8000/api/v1/subCategory/post-subCategory
 routes.post(
     '/post-subCategory',
-    validation(subCategoryValidation.addSubCategory),
+    auth(["employee", "admin", "user"]),
     upload.single('subcat_img'), 
+    validation(subCategoryValidation.addSubCategory),
     subCategoryController.postsubCategores
 )
 
 //http://localhost:8000/api/v1/subCategory/put-subCategory/:id
 routes.put(
     '/put-subCategory/:id',
-    validation(subCategoryValidation.updateSubCategory),
-    upload.single('subcat_img'), 
+    upload.single('subcat_img'),
+    validation(subCategoryValidation.updateSubCategory), 
     subCategoryController.putsubCategores
 )
 

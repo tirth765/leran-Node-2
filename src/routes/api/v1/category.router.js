@@ -41,6 +41,7 @@ routes.put(
 //http://localhost:8000/api/v1/category/delete-category:id
 routes.delete(
   "/delete-category/:id",
+  auth(["employee", "admin", "user"]),
   validation(categoryValidation.deleteCategory),
   auth(["employee", "admin", "user"]),
   categoryController.deleteCategory
