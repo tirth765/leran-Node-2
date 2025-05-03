@@ -22,9 +22,16 @@ const SubCategorySchema = new mongoose.Schema(
             trim: true
         },
         subcat_img: {
-            type: String,
-            required: true,
+            type: {
+                public_id: String,
+                url: String
+            }
         }
+        
+        // subcat_img: {
+        //     type: String,
+        //     required: true,
+        // }
     },
     {
         timestamps: true,

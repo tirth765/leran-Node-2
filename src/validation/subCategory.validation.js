@@ -17,7 +17,7 @@ const updateSubCategory = {
         Category: Joi.string().required(),
         name: Joi.string().required().trim(),
         description: Joi.string().required(),
-        // cat_img: Joi.object()
+        subcat_img: Joi.object()
     })
 }
 

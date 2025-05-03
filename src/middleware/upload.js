@@ -19,15 +19,15 @@ const storage = multer.diskStorage({
         const filePath = path.join('public', file.fieldname)
         console.log('bbb',filePath);
 
-        // fs.mkdir(filePath, { recursive: true }, (err) => {
-        //     if (err) {
-        //         console.log("not now",err);
-        //     }
-        // })
+        fs.mkdir(filePath, { recursive: true }, (err) => {
+            if (err) {
+                console.log("not now",err);
+            }
+        })
 
-        // cb(null, filePath)
+        cb(null, filePath)
 
-        cb(null, '/tmp')
+        // cb(null, '/tmp')
 
        
     },
