@@ -4,7 +4,6 @@ const addCategory = {
     body: Joi.object().keys({
         name: Joi.string().required().trim(),
         description: Joi.string().required(),
-        cat_img: Joi.string()
     })
 }
 
@@ -14,7 +13,7 @@ const updateCategory = {
     body: Joi.object().keys({
         name: Joi.string().required().trim(),
         description: Joi.string().required(),
-        cat_img: Joi.string()
+        cat_img: Joi.object()
     })
 }
 

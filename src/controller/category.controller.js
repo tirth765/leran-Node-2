@@ -102,7 +102,6 @@ const updateCategory = async (req, res) => {
 
     console.log(req.body, req.file);
 
-    let updatedAll;
     let category;
     const OldCategory = await Categores.findById(req.params.id);
 
@@ -114,15 +113,11 @@ const updateCategory = async (req, res) => {
 
       console.log("UpdateCloudinaryImage:", cImage);
 
-      updatedAll = { ...req.body, cat_img: { url: cImage.url, public_id: cImage.public_id } };
-
-      category = await Categores.findByIdAndUpdate(req.params.id, updatedAll, { new: true, runValidators: true })
+      category = await Categores.findByIdAndUpdate(req.params.id, { ...req.body, cat_img: { url: cImage.url, public_id: cImage.public_id } }, { new: true })
 
     } else {
-      updatedAll = { ...req.body }
+      category = await Categores.findByIdAndUpdate(req.params.id, req.body, { new: true})
     }
-
-
 
     if (!category) {
       return res.status(400).json({
