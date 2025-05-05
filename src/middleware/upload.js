@@ -16,18 +16,18 @@ const storage = multer.diskStorage({
             return cb(new Error("Only PNG and JPG file is allowed"))
         }
 
-        const filePath = path.join('public', file.fieldname)
-        console.log('bbb',filePath);
+        // const filePath = path.join('public', file.fieldname)
+        // console.log('bbb',filePath);
 
-        fs.mkdir(filePath, { recursive: true }, (err) => {
-            if (err) {
-                console.log("not now",err);
-            }
-        })
+        // fs.mkdir(filePath, { recursive: true }, (err) => {
+        //     if (err) {
+        //         console.log("not now",err);
+        //     }
+        // })
 
-        cb(null, filePath)
+        // cb(null, filePath)
 
-        // cb(null, '/tmp')
+        cb(null, '/tmp')
 
        
     },
