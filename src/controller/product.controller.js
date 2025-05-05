@@ -1,6 +1,7 @@
 const Products = require("../models/product.model");
 const fs = require("fs");
 const SubCategores = require("../models/subCategory.model");
+const { cloudinaryImage, deleteCloudinaryImage } = require("../utils/cloudinary");
 
 const getproducts = async (req, res) => {
   try {
@@ -35,8 +36,8 @@ const getproducts = async (req, res) => {
 const getSubcat = async (req, res) => {
   try {
     console.log(req.params.id);
-    
-    const subcat = await SubCategores.find({Category: req.params.id})
+
+    const subcat = await SubCategores.find({ Category: req.params.id })
 
     if (!subcat) {
       return res.status(400)
@@ -67,7 +68,13 @@ const getSubcat = async (req, res) => {
 const postproduct = async (req, res) => {
   try {
     console.log(req.body);
-    const product = await Products.create({ ...req.body, product_img: req.file.path })
+
+    const cImage = await cloudinaryImage(req.file.path, "product");
+
+    console.log("cloudinaryImage:", cImage);
+
+    const product = await Products.create({ ...req.body, product_img: { url: cImage.url, public_id: cImage.public_id } })
+
     if (!product) {
       return res.status(400)
         .json({
@@ -93,58 +100,52 @@ const postproduct = async (req, res) => {
   }
 };
 
-const putproduct = async(req, res) => {
+const putproduct = async (req, res) => {
   try {
-    let updatedAll;
-    
-    const OldCategory = await Products.findById(req.params.id);
-    if(req.file){
-       updatedAll = {...req.body, product_img: req.file.path};
-        fs.unlink(OldCategory.product_img, (err) => {
-            if(err){
-                return res.status(400).json({
-                    success: false,
-                    data: null,
-                    message: "Error in update category: " 
-                })
-            }
-        })
-    } else {
-        updatedAll =  {...req.body}
+    let product;
 
+    const OldProduct = await Products.findById(req.params.id);
+    if (req.file) {
+
+       await deleteCloudinaryImage(OldProduct.product_img.public_id)
+
+            const cImage = await cloudinaryImage(req.file?.path, "product")
+      
+            console.log("UpdateCloudinaryImage:", cImage);
+      
+            product = await Products.findByIdAndUpdate(req.params.id, { ...req.body, product_img: { url: cImage.url, public_id: cImage.public_id } }, { new: true })
+      
+
+    } else {
+      product = await Products.findByIdAndUpdate(req.params.id, req.body, { new: true})
     }
 
-    const product = await Products.findByIdAndUpdate(req.params.id,
-      updatedAll,
-      { new: true, runValidators: true }
-    );
-
     if (!product) {
-        return res.status(400).json({
-            success: false,
-            data: null,
-            message: "Error during the update."
-        })
+      return res.status(400).json({
+        success: false,
+        data: null,
+        message: "Error during the update."
+      })
     }
 
     res.status(200).json({
-        success: true,
-        data: product,
-        message: "updated successfully."
+      success: true,
+      data: product,
+      message: "updated successfully."
     })
-} catch (error) {
+  } catch (error) {
     res.status(500).json({
-        success: false,
-        data: null,
-        message: "Internal server error:" + error.message
+      success: false,
+      data: null,
+      message: "Internal server error:" + error.message
     })
-}
+  }
 };
 
-const deleteproduct = async(req, res) => {
+const deleteproduct = async (req, res) => {
   try {
     const product = await Products.findByIdAndDelete(req.params.id)
-    
+
     if (!product) {
       return res.status(400)
         .json({
@@ -154,19 +155,7 @@ const deleteproduct = async(req, res) => {
         })
     }
 
-    fs.unlink(product.product_img, (err) => {
-      if(err) {
-        return res.status(400)
-        .json({
-          success: false,
-          data: null,
-          message: "Error"
-        })      
-      } 
-
-    
-    })
-
+      deleteCloudinaryImage(product.product_img.public_id)
 
     return res.status(200)
       .json({
