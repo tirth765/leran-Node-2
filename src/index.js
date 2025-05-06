@@ -22,7 +22,6 @@ app.use(passport.session());
 Google()
 connectChat()
 
-
 var corsOptions = {
     origin: 'https://fruit-table-react.vercel.app',
     // origin: 'http://localhost:3000',
