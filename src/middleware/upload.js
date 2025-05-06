@@ -28,7 +28,6 @@ const storage = multer.diskStorage({
         // cb(null, filePath)
 
         cb(null, '/tmp')
-
        
     },
 
