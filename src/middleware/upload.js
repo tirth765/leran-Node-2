@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 
         console.log(ext);
 
-        if(!(ext === ".png" || ext === ".jpeg")) {
+        if(!(ext === ".png" || ext === ".jpeg" || ext === ".jpg")) {
             return cb(new Error("Only PNG and JPG file is allowed"))
         }
 

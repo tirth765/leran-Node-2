@@ -24,7 +24,18 @@ routes.get(
 routes.post(
     '/post-product',
     auth(["employee", "admin", "user"]),
-    upload.single("product_img"),
+    (req, res, next) => {
+        upload.single("product_img") (req, res, (err) => {
+            if(err) {
+                res.status(400).json({
+                    message: "file type is  not allowed"
+                  })
+            }
+
+            next()
+        })  
+    },
+    
     validation(ProductValidation.addProduct),
     productController.postproduct
 )
