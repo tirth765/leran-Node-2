@@ -28,7 +28,7 @@ routes.post(
         upload.single("product_img") (req, res, (err) => {
             if(err) {
                 res.status(400).json({
-                    message: "file type is  not allowed"
+                    message: err.message
                   })
             }
 
