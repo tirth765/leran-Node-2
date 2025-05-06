@@ -17,7 +17,6 @@ routes.get(
 routes.get(
     '/get-subcat/:id',
     productController.getSubcat
-
 )
 
 // http://localhost:8000/api/v1/product/post-product  
