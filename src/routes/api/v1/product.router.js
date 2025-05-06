@@ -31,7 +31,6 @@ routes.post(
                     message: err.message
                   })
             }
-
             next()
         })  
     },
