@@ -81,4 +81,19 @@ user.post(
     usersController.OTPVarificationEmail
 )
 
+user.post(
+    '/ForgotPassword',
+    usersController.ForgotPassword
+)
+
+user.post(
+    '/ForgotCheckOTP',
+    usersController.ForgotAndCheckOTP
+)
+
+user.post(
+    '/NewPassword',
+    usersController.CreateNewPassword
+)
+
 module.exports = user

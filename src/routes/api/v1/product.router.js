@@ -25,8 +25,10 @@ routes.post(
     auth(["employee", "admin", "user"]),
     (req, res, next) => {
         upload.single("product_img") (req, res, function(err) {
+            console.log(err);
+            
             if(err) {
-                res.status(400).json({
+                return res.status(400).json({
                     message: err.message
                   })
             }

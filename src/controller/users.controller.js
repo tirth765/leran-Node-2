@@ -5,7 +5,6 @@ const Users = require("../models/users.model");
 const Mailer = require("../utils/nodeMailer");
 const { PhoneNumberOTP, OTPVarification } = require("../utils/phoneOTP");
 const CreatePDF = require("../utils/pdfmake");
-const { options } = require("joi");
 
 const generate_user = async (userID) => {
   const user = await Users.findById(userID);
@@ -66,30 +65,30 @@ const registerUser = async (req, res) => {
 
       console.log("statusEmail", statusEmail);
 
-     
 
-        // req.session.email = email;
-        // req.session.otp = OTP;
 
-        const cookieOption = {
-          httpOnly: true,
-          secure: true,
-          sameSite:'None',
-          maxAge: 60 * 5 * 1000
-        }
-      
+      // req.session.email = email;
+      // req.session.otp = OTP;
 
-      const otpTocken = jwt.sign({OTP, email},process.env.otpTocken ,{expiresIn:'5m'})
+      const cookieOption = {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        maxAge: 60 * 5 * 1000
+      }
+
+
+      const otpTocken = jwt.sign({ OTP, email }, process.env.otpTocken, { expiresIn: '5m' })
 
       // PhoneNumberOTP()
 
       return res.status(201)
-      .cookie("otpTocken", otpTocken, cookieOption)
-      .json({
-        success: true,
-        data: userData,
-        message: "Please Verified OTP",
-      });
+        .cookie("otpTocken", otpTocken, cookieOption)
+        .json({
+          success: true,
+          data: userData,
+          message: "Please Verified OTP",
+        });
     } catch (error) {
       return res.status(500).json({
         success: false,
@@ -176,7 +175,7 @@ const checkVarification = async (req, res) => {
       }
 
       await CreatePDF(docDefinition, user.name)
-      
+
       return res.status(200).json({
         success: true,
         message: "OTP verified"
@@ -234,7 +233,7 @@ const user_login = async (req, res) => {
     const AccOptions = {
       httpOnly: true,
       secure: true,
-      sameSite:'None',
+      sameSite: 'None',
       maxAge: 60 * 60 * 1000
 
     };
@@ -242,7 +241,7 @@ const user_login = async (req, res) => {
     const RefOptions = {
       httpOnly: true,
       secure: true,
-      sameSite:'None',
+      sameSite: 'None',
       maxAge: 60 * 60 * 24 * 1000
 
     };
@@ -315,7 +314,7 @@ const generateNewTokens = async (req, res) => {
       const options = {
         httpOnly: true,
         secure: true,
-        sameSite:'None',
+        sameSite: 'None',
         maxAge: 60 * 60 * 1000
       };
 
@@ -367,7 +366,7 @@ const user_logout = async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true,
-      sameSite:'None',
+      sameSite: 'None',
     };
 
     return res
@@ -439,8 +438,8 @@ const OTPVarificationEmail = async (req, res) => {
     console.log(otp);
 
     const token =
-    req.cookies.otpTocken ||
-    req.headers.authorization?.replace("Bearer ", "");
+      req.cookies.otpTocken ||
+      req.headers.authorization?.replace("Bearer ", "");
 
     if (!token) {
       return res.status(400).json({
@@ -451,7 +450,7 @@ const OTPVarificationEmail = async (req, res) => {
     }
 
     console.log(token);
-    
+
 
     const varifyTocken = await jwt.verify(token, process.env.otpTocken);
 
@@ -465,7 +464,7 @@ const OTPVarificationEmail = async (req, res) => {
       });
     }
 
-    if(varifyTocken.email === email && varifyTocken.OTP == otp) {
+    if (varifyTocken.email === email && varifyTocken.OTP == otp) {
 
       const user = await Users.findOne({ email: email })
 
@@ -477,65 +476,63 @@ const OTPVarificationEmail = async (req, res) => {
         success: true,
         message: "OTP verified"
       });
-   
+
     }
-     
 
-      // const docDefinition = {
-      //   content: [
-      //     { text: 'Tables', style: 'titleStyle', width: '*' },
-      //     {
-      //       image: 'public/cat_img/1738379580700-535171627-pngwing.com (1).png',
-      //       width: 150,
-      //       height: 150,
-      //       alignment: 'center'
-      //     },
-      //     {
-      //       columns: [
-
-
-
-      //         { width: '*', text: '' },
-      //         {
-      //           width: 'auto',
-      //           table: {
-      //             body: [
-      //               ['Name', 'Email', 'Role'],
-      //               [`${user.name}`, `${user.email}`, `${user.role}`]
-      //             ],
-      //             alignment: "center"
-      //           }
-      //         },
-
-      //         { width: '*', text: '' },
-      //       ]
-      //     },
+    // const docDefinition = {
+    //   content: [
+    //     { text: 'Tables', style: 'titleStyle', width: '*' },
+    //     {
+    //       image: 'public/cat_img/1738379580700-535171627-pngwing.com (1).png',
+    //       width: 150,
+    //       height: 150,
+    //       alignment: 'center'
+    //     },
+    //     {
+    //       columns: [
 
 
 
-      //     {
-      //       text: 'The following table has nothing more than a body array The following table has nothing more than a body array', style: "dec", width: '*'
-      //     },
+    //         { width: '*', text: '' },
+    //         {
+    //           width: 'auto',
+    //           table: {
+    //             body: [
+    //               ['Name', 'Email', 'Role'],
+    //               [`${user.name}`, `${user.email}`, `${user.role}`]
+    //             ],
+    //             alignment: "center"
+    //           }
+    //         },
 
-      //   ],
+    //         { width: '*', text: '' },
+    //       ]
+    //     },
 
 
-      //   styles: {
-      //     titleStyle: {
-      //       fontSize: 20,
-      //       bold: true,
-      //       alignment: 'center'
-      //     },
 
-      //     dec: {
-      //       alignment: 'center'
-      //     }
-      //   }
-      // }
+    //     {
+    //       text: 'The following table has nothing more than a body array The following table has nothing more than a body array', style: "dec", width: '*'
+    //     },
 
-      // await CreatePDF(docDefinition, user.name)
-      
-     
+    //   ],
+
+
+    //   styles: {
+    //     titleStyle: {
+    //       fontSize: 20,
+    //       bold: true,
+    //       alignment: 'center'
+    //     },
+
+    //     dec: {
+    //       alignment: 'center'
+    //     }
+    //   }
+    // }
+
+    // await CreatePDF(docDefinition, user.name)
+
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -544,6 +541,160 @@ const OTPVarificationEmail = async (req, res) => {
   }
 
 }
+
+const ForgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  console.log("Email: ",req.body.email);
+  
+  const user = await Users.findOne({ email: email });
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      data: [],
+      message: "User not found",
+    });
+  }
+
+  const OTP = Math.floor(1000 + Math.random() * 9000);
+
+  console.log(OTP);
+  
+
+  const statusEmail = await Mailer(email, "Verify your Fruitable account", `Your OTP is:- ${OTP}`)
+
+  console.log("statusEmail", statusEmail);
+
+  const cookieOption = {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+    maxAge: 60 * 5 * 1000
+  }
+
+
+  const ForgotOtpTocken = jwt.sign({ OTP, email }, process.env.ForgotOtpTocken, { expiresIn: '5m' })
+
+  return res.status(201)
+    .cookie("ForgotOtpTocken", ForgotOtpTocken, cookieOption)
+    .json({
+      success: true,
+      message: "Please Verified OTP",
+    });
+
+
+}
+
+const ForgotAndCheckOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    console.log("JUST GIVE ME OTP",otp);
+
+    const token =
+      req.cookies?.ForgotOtpTocken ||
+      req.headers.authorization?.replace("Bearer ", "");
+
+      console.log("hello",token);
+      
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        data: [],
+        message: "token not found why!",
+      });
+    }
+
+    console.log("ForgotTocken",token);
+
+
+    const varifyForgotOtpTocken = await jwt.verify(token, process.env.ForgotOtpTocken);
+
+    console.log(varifyForgotOtpTocken);
+
+    if (!varifyForgotOtpTocken) {
+      return res.status(400).json({
+        success: false,
+        data: [],
+        message: "token not verify",
+      });
+    }
+
+    console.log("LET'S GO!");
+    console.log("Email:", email);
+    console.log("OTP:", otp);    
+
+    if (varifyForgotOtpTocken.email === email && varifyForgotOtpTocken.OTP == otp) {
+
+      const user = await Users.findOne({ email: email })
+
+      user.isVarify = true
+
+      await user.save({ validateBeforeSave: false })
+
+      return res.status(200).json({
+        success: true,
+        message: "OTP verified"
+      });
+
+    }
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error in server: " + error.message
+    });
+  }
+}
+
+const CreateNewPassword = async (req, res) => {
+
+  const { email, ConformPassword, password } = req.body;
+
+  console.log("Email:", email);
+  console.log("password:", password);
+  console.log("ConformPassword:", ConformPassword);
+
+  const user = await Users.findOne({ email: email });
+  console.log("Find User", user);
+
+  const hashPassword = await bcrypt.hash(ConformPassword, 10);
+
+  console.log("hashPassword",hashPassword);
+  
+
+    if (!hashPassword) {
+      return res.status(401).json({
+        success: false,
+        data: [],
+        message: "Invalid password",
+      });
+    }
+
+    const User = await Users.findByIdAndUpdate(
+      user._id,
+      {
+        $set: {
+          password: hashPassword
+        }
+      },
+
+      {
+        new: true,
+      });
+
+      console.log(User);
+      
+
+    // const userData = await Users.findById(User._id).select("-password");
+
+    // const User = await Users.findByIdAndUpdate({ password: hashPassword });
+
+  console.log("END?");
+  
+}
+
 
 
 module.exports = {
@@ -554,5 +705,8 @@ module.exports = {
   check_Auth,
   generate_user,
   checkVarification,
-  OTPVarificationEmail
+  OTPVarificationEmail,
+  ForgotPassword,
+  ForgotAndCheckOTP,
+  CreateNewPassword
 };
