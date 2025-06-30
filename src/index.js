@@ -23,8 +23,8 @@ Google()
 connectChat()
 
 var corsOptions = {
-    origin: 'https://fruit-table-react.vercel.app',
-    // origin: 'http://localhost:3000',
+    // origin: 'https://fruit-table-react.vercel.app',
+    origin: 'http://localhost:3000',
     optionsSuccessStatus: 200,
     credentials: true
 }
